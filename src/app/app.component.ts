@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +11,7 @@ export class AppComponent {
 
   navigateTransporter1($event: string) {
     this.loadedOption = $event;
+
+    ViewChild
   }
 }

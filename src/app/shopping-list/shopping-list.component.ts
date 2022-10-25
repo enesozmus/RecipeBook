@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Ingredient } from '../models/ingredient.model';
 
 @Component({
@@ -6,7 +6,7 @@ import { Ingredient } from '../models/ingredient.model';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.scss']
 })
-export class ShoppingListComponent implements OnInit {
+export class ShoppingListComponent {
 
   ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
@@ -15,9 +15,8 @@ export class ShoppingListComponent implements OnInit {
     new Ingredient('Tangerines', 20)
   ];
 
-  constructor() { }
-
-  ngOnInit(): void {
+  onIngredientAdded($event: Ingredient) {
+    this.ingredients.push($event);
   }
 
 }
