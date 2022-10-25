@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'december';
+
+  loadedOption: string = 'recipe';
+
+  navigateTransporter1($event: string) {
+    this.loadedOption = $event;
+  }
 }

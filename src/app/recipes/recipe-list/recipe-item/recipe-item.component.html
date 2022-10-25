@@ -1,1 +1,20 @@
-<p>recipe-item works!</p>
+<div class="list-group">
+    <!---->
+    <a (click)="onSelected()" class="list-group-item list-group-item-action mt-2" aria-current="true">
+        <!---->
+        <div class="float-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"> {{recipe.name}} </h5>
+                <small>24.10.2022</small>
+            </div>
+            <p class="mb-1"> {{recipe.description}} </p>
+            <small>And some small print.</small>
+        </div>
+        <!---->
+        <div class="float-end">
+            <img src="{{recipe.imagePath}}" [src]="recipe.imagePath" class="img-fluid" alt="{{recipe.name}}">
+        </div>
+        <!---->
+    </a>
+    <!---->
+</div>

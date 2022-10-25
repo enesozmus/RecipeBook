@@ -1,1 +1,16 @@
-<app-recipe-item></app-recipe-item>
+<div class="row">
+    <div class="col-sm-12">
+        <button class="btn btn-outline-success">Add a new recipe</button>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-sm-12">
+        <!---->
+        <app-recipe-item
+            *ngFor="let recipe of recipes"
+            [recipeInputTransporter]="recipe"
+            (recipeLinkSelected1)="onRecipeSelected(recipe)"></app-recipe-item>
+        <!---->
+    </div>
+</div>
