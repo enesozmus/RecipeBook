@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Recipe } from 'src/app/models/recipe.model';
+import { RecipeService } from 'src/app/services/recipe.service';
 
 @Component({
   selector: 'app-recipe-item',
@@ -13,12 +14,31 @@ export class RecipeItemComponent {
   //  <app-recipe-item></app-recipe-item>   'a bak
   @Input('recipeInputTransporter') recipe: Recipe;
 
-  // bu bilgi başka bir yere gidecek
-  // RecipeListComponent'e taşınacak... oradan da RecipesComponent'e taşınacak
-  // <app-recipe-item></app-recipe-item>    'a bak
-  @Output('recipeLinkSelected1') recipeSelected = new EventEmitter<void>();
+  constructor(private recipeService: RecipeService) { }
 
   onSelected() {
-    this.recipeSelected.emit();
+    this.recipeService.recipeSelected.emit(this.recipe);
   }
+
+  /*
+    bu bilgi başka bir yere gidecek
+    RecipeListComponent'e taşınacak... oradan da RecipesComponent'e taşınacak
+    <app-recipe-item></app-recipe-item>    'a bak
+    @Output('recipeLinkSelected1') recipeSelected = new EventEmitter<void>();
+
+    onSelected() {
+      this.recipeSelected.emit();
+    }
+
+    _______________
+    <app-recipe-item></app-recipe-item>
+    (recipeLinkSelected1)="onRecipeSelected(recipe)"
+
+    // bize RecipeItemComponent'den gelen bilgi RecipesComponent'e taşınacak
+    @Output('recipeLinkSelected2') recipeWasSelected = new EventEmitter<Recipe>();
+    onRecipeSelected(recipe: Recipe) {
+      this.recipeWasSelected.emit(recipe);
+    }
+  }
+  */
 }
