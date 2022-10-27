@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <button class="btn btn-outline-success">Add a new recipe</button>
+        <button class="btn btn-outline-success" (click)="onNewRecipe()">Add a new recipe</button>
     </div>
 </div>
 
@@ -8,8 +8,9 @@
     <div class="col-sm-12">
         <!---->
         <app-recipe-item
-            *ngFor="let recipe of recipes"
+            *ngFor="let recipe of recipes; let i = index"
             [recipeInputTransporter]="recipe"
+            [index]="i"
         >
         </app-recipe-item>
         <!---->
