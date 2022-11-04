@@ -13,16 +13,32 @@
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item"><a class="nav-link" aria-current="page">Home</a>
                 </li>
-                <li class="nav-item"><a routerLink="/recipes" routerLinkActive="active" class="nav-link">Recipes</a>
+                <li class="nav-item" *ngIf="isAuthenticated"><a routerLink="/recipes" routerLinkActive="active" class="nav-link">Recipes</a>
                 </li>
                 <li class="nav-item"><a routerLink="/shopping-list" routerLinkActive="active" class="nav-link">Shopping List</a>
                 </li>
+                <li class="nav-item" *ngIf="!isAuthenticated"><a routerLink="/auth" routerLinkActive="active" class="nav-link">Login/Register</a>
+                </li>
+                <li class="nav-item" *ngIf="isAuthenticated"><a class="nav-link" (click)="onLogout()">Logout</a>
+                </li>
             </ul>
-            <!-- Search Part -->
+            <!-- Dropdown Part -->
+            <div class="dropdown" *ngIf="isAuthenticated">
+                <button id="dropdown-header-manage" class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Manage
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" (click)="onSaveData()">Save Data</a></li>
+                  <li><a class="dropdown-item" (click)="onFetchData()">Fetch Data</a></li>
+                  <li><a class="dropdown-item" >Something else here</a></li>
+                </ul>
+              </div>
+            <!-- Search Part 
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
+            -->
         </div>
     </div>
 </nav>

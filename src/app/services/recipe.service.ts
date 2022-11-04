@@ -10,8 +10,7 @@ import { ShoppingListService } from './shopping-list.service';
 export class RecipeService {
 
   recipesChanged = new Subject<Recipe[]>();
-
-  // yemek tarifleri
+/*
   private recipes: Recipe[] = [
     new Recipe(
       'A Test Recipe 1',
@@ -41,7 +40,8 @@ export class RecipeService {
       ]
     )
   ];
-
+*/
+private recipes: Recipe[] = [];
   constructor(private shoppingListService: ShoppingListService) { }
 
   // yemek tariflerini listele
@@ -71,6 +71,12 @@ export class RecipeService {
 
   deleteRecipe(index: number) {
     this.recipes.splice(index, 1);
+    this.recipesChanged.next(this.recipes.slice());
+  }
+
+  //
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
     this.recipesChanged.next(this.recipes.slice());
   }
 }
