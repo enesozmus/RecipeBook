@@ -19,6 +19,8 @@ import { DropdownDirective } from './directives/dropdown.directive';
 import { AuthComponent } from './auth/auth.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AlertComponent } from './alert/alert.component';
+import { PlaceholderDirective } from './directives/placeholder.directive';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     RecipeStartComponent,
     RecipeEditComponent,
     AuthComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    AlertComponent,
+    PlaceholderDirective
   ],
   imports: [
     BrowserModule,
