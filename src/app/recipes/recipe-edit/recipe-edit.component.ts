@@ -83,7 +83,6 @@ export class RecipeEditComponent implements OnInit {
           this.recipeReactiveForm.value['ingredients']
         );
     */
-    debugger;
     if (this.editMode) {
       this.recipeService.updateRecipe(this.id, this.recipeReactiveForm.value);
     }

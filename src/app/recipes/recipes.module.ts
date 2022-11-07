@@ -33,7 +33,7 @@ import { ReactiveFormsModule } from '@angular/forms';
      *    → The forChild() method creates an NgModule that contains all the directives and the given routes, but does not include the Router service.
      */
     RouterModule.forChild([
-      { path: 'recipes', component: RecipesComponent, canActivate: [AuthGuard], children: [
+      { path: '', component: RecipesComponent, canActivate: [AuthGuard], children: [
         { path: '', component: RecipeStartComponent },
         { path: 'new', component: RecipeEditComponent },
         { path: ':id', component: RecipeDetailComponent, resolve: [RecipesResolverService] },
