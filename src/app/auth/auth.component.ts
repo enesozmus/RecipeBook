@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { IAuthResponse } from '../interfaces/auth-response';
 import { AuthService } from '../services/auth.service';
-import { AlertComponent } from '../alert/alert.component';
+import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../directives/placeholder.directive';
 
 /**
