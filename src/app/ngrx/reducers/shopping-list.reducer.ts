@@ -73,6 +73,18 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
 
 /*
 import { createReducer, on } from "@ngrx/store";
+import { Ingredient } from "src/app/models/ingredient.model";
+import * as ShoppingListActions from '../actions/shopping-list.actions';
+
+export const initialState = {
+  ingredients: [
+    new Ingredient('Apples', 5),
+    new Ingredient('Lemons', 10),
+    new Ingredient('Cherries', 15),
+    new Ingredient('Tangerines', 20),
+    new Ingredient('Apricots', 25)
+  ]
+};
 
 export const initialState2: Ingredient[] = [
   new Ingredient('Apples', 5),
@@ -83,10 +95,12 @@ export const initialState2: Ingredient[] = [
 ];
 
 export const shoppingListReducer = createReducer(
-  initialState2,
-  on(
-    ShoppingListActions.ADD_INGREDIENT2,
-    (state, ingredient) => ({ ...state, ingredients: [...state, ingredient] })
+  initialState,
+  on(ShoppingListActions.ADD_INGREDIENT2,
+    (state, { ingredient }) => ({
+      ...state,
+      ingredients: [...state.ingredients, ingredient],
+    })
   )
 );
 */

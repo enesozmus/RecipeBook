@@ -34,16 +34,9 @@
 
 /*
 
-import { createAction, props } from '@ngrx/store';
-
 export const login = createAction(
     '[Login Page] Login',
     props<{ username: string; password: string }>()
-);
-
-export const ADD_INGREDIENT2 = createAction(
-    'ADD_INGREDIENT2',
-    props<{ ingredient: Ingredient }>()
 );
 
 export const setScores = createAction(
@@ -57,12 +50,18 @@ onSubmit(username: string, password: string) {
 
 */
 
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
 import { Ingredient } from 'src/app/models/ingredient.model';
 
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 
 export class AddIngredient implements Action {
     readonly type = ADD_INGREDIENT;
-    payload: Ingredient;
+    // payload: Ingredient;
+    constructor(public payload: Ingredient) {}
 }
+
+export const ADD_INGREDIENT2 = createAction(
+    'ADD_INGREDIENT2',
+    props<{ ingredient: Ingredient }>()
+);
