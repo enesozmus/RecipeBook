@@ -3,11 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 
-import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+
+import { StoreModule } from '@ngrx/store';
+import { shoppingListReducer } from './ngrx/reducers/shopping-list.reducer';
 
 
 
@@ -20,7 +23,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     BrowserModule,
     AppRoutingModule, HttpClientModule,
     //RecipesModule, ShoppingModule, AuthModule
-    SharedModule
+    SharedModule,
+    StoreModule.forRoot({ shoppingList: shoppingListReducer })
   ],
   providers: [
     {

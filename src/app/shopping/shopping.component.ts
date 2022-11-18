@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+
 import { Ingredient } from '../models/ingredient.model';
 import { ShoppingListService } from '../services/shopping-list.service';
 
@@ -10,19 +12,27 @@ import { ShoppingListService } from '../services/shopping-list.service';
 })
 export class ShoppingComponent implements OnInit, OnDestroy {
 
-  ingredients: Ingredient[];
-  private igChangeSub: Subscription;
+  // ingredients: Ingredient[];
+  ingredients: Observable<{ ingredients: Ingredient[] }>;
+  // private igChangeSub: Subscription;
 
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(
+    private shoppingListService: ShoppingListService,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) { }
 
   ngOnInit(): void {
-    this.ingredients = this.shoppingListService.getIngredients();
 
+    this.ingredients = this.store.select('shoppingList');
+
+    /*
+    this.ingredients = this.shoppingListService.getIngredients();
     this.igChangeSub =
       this.shoppingListService.ingredientsChanged
         .subscribe((ingredients: Ingredient[]) => {
           this.ingredients = ingredients;
         });
+    */
   }
 
   // üzerine tıklandığında update işlemi için kendi bilgilerini forma bassın
@@ -33,7 +43,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.igChangeSub.unsubscribe();
+    // this.igChangeSub.unsubscribe();
   }
 
 }
