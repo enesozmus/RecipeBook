@@ -15,7 +15,8 @@ export class ShoppingListService {
     new Ingredient('Apples', 5),
     new Ingredient('Lemons', 10),
     new Ingredient('Cherries', 15),
-    new Ingredient('Tangerines', 20)
+    new Ingredient('Tangerines', 20),
+    new Ingredient('Apricots', 25)
   ];
 
   getIngredients() {

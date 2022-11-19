@@ -24,6 +24,11 @@ import { shoppingListReducer } from './ngrx/reducers/shopping-list.reducer';
     AppRoutingModule, HttpClientModule,
     //RecipesModule, ShoppingModule, AuthModule
     SharedModule,
+    /**
+     * We added NgRx to our application by including the StoreModule and calling .forRoot.
+     * .forRoot then needs a map, an object that tells NgRx which reducers we have in our application.
+     * A reducer is just a function.
+     */
     StoreModule.forRoot({ shoppingList: shoppingListReducer })
   ],
   providers: [

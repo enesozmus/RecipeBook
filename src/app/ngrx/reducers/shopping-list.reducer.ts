@@ -7,19 +7,9 @@
  */
 
 /**
- * Let's get started by implementing a reducer.
- * Here, we should export a function and define an initialState.
- *    → Each reducer function is a listener of actions.
- *    → The reducer function's responsibility is to handle the state transitions in an immutable way.
- */
-
-/**
  * You define the shape of the state according to what you are capturing,
  * ...whether it be a single type such as a number, or a more complex object with multiple properties.
  */
-import { Ingredient } from "../../models/ingredient.model";
-
-import * as ShoppingListActions from '../actions/shopping-list.actions';
 
 /**
  * The initial state gives the state an initial value, or provides a value if the current state is undefined.
@@ -28,79 +18,99 @@ import * as ShoppingListActions from '../actions/shopping-list.actions';
  * It should be a JavaScript object.
  */
 
-export const initialState = {
-  ingredients: [
-    new Ingredient('Apples', 5),
-    new Ingredient('Lemons', 10),
-    new Ingredient('Cherries', 15),
-    new Ingredient('Tangerines', 20),
-    new Ingredient('Apricots', 25)
-  ]
-};
+import { Ingredient } from "../../models/ingredient.model";
+import * as ShoppingListActions from '../actions/shopping-list.actions';
+import { createReducer, on, Action } from "@ngrx/store";
 
-// Now we can set that initialState by giving this first argument in that function.
-export function shoppingListReducer(state = initialState, action: ShoppingListActions.AddIngredient) {
-
-  /**
-   * Now, to check different kinds of possible actions, you could add multiple if statements and run different codes depending on which action you have.
-   * Or since you have multiple possible conditions, you can use a switch case statement.
-   */
-  switch (action.type) {
-    case ShoppingListActions.ADD_INGREDIENT:
-      /**
-       * So never touch the existing state.
-       * Instead return a new object which will replace the old state
-       * and make sure you haven't lost all the old data.
-       * copy the old state with the spread operator (...)
-       *  → Each action handles the state transition immutably.
-       *  → This means that the state transitions are not modifying the original state, but are returning a new state object using the spread operator.
-       *  → The spread syntax copies the properties from the current state into the object, creating a new reference.
-       *  → This ensures that a new state is produced with each change, preserving the purity of the change.
-       *  → This also promotes referential integrity, guaranteeing that the old reference was discarded when a state change occurred.
-       *  → It essentially pulls out all the properties of the old state and adds these properties to this new object.
-       *  → We have a new object with the old data and hence we have a copy of the old state.
-       *  → return {...state}
-       * 
-       *  → * The spread operator only does shallow copying and does not handle deeply nested objects.
-       *  → * You need to copy each level in the object to ensure immutability.
-       *  → * There are libraries that handle deep copying including lodash and immer.
-       */
-      return { ...state, ingredients: [...state.ingredients, action.payload] };
-    default:
-      return state;
-  }
+export interface State {
+  ingredients: Ingredient[];
+  editIndex: number;
 }
 
-/*
-import { createReducer, on } from "@ngrx/store";
-import { Ingredient } from "src/app/models/ingredient.model";
-import * as ShoppingListActions from '../actions/shopping-list.actions';
+export interface AppState {
+  shoppingList: State;
+}
 
-export const initialState = {
+const initialState: State = {
   ingredients: [
     new Ingredient('Apples', 5),
     new Ingredient('Lemons', 10),
     new Ingredient('Cherries', 15),
     new Ingredient('Tangerines', 20),
     new Ingredient('Apricots', 25)
-  ]
+  ],
+  editIndex: -1
 };
 
-export const initialState2: Ingredient[] = [
-  new Ingredient('Apples', 5),
-  new Ingredient('Lemons', 10),
-  new Ingredient('Cherries', 15),
-  new Ingredient('Tangerines', 20),
-  new Ingredient('Apricots', 25)
-];
+/**
+ * Let's get started by implementing a reducer.
+ * Here, we should export a function and define an initialState.
+ *    → Each reducer function is a listener of actions.
+ *    → The reducer function's responsibility is to handle the state transitions in an immutable way.
+ * Now, we can set that initialState by giving this first argument in that function.
+ */
 
-export const shoppingListReducer = createReducer(
+
+const _shoppingListReducer = createReducer(
+
   initialState,
-  on(ShoppingListActions.ADD_INGREDIENT2,
-    (state, { ingredient }) => ({
+
+  on(
+    ShoppingListActions.addIngredient,
+    (state, action) => ({
       ...state,
-      ingredients: [...state.ingredients, ingredient],
+      ingredients: state.ingredients.concat(action.ingredient)
+    })
+  ),
+
+  on(
+    ShoppingListActions.addIngredients,
+    (state, action) => ({
+      ...state,
+      ingredients: state.ingredients.concat(...action.ingredients)
+    })
+  ),
+
+  on(
+    ShoppingListActions.updateIngredient,
+    (state, action) => ({
+      ...state,
+      editIndex: -1,
+      ingredients: state.ingredients.map(
+        (ingredient, index) => index === state.editIndex ? { ...action.ingredient } : ingredient
+      )
+    })
+  ),
+
+  on(
+    ShoppingListActions.deleteIngredient,
+    (state) => ({
+      ...state,
+      editIndex: -1,
+      ingredients: state.ingredients.filter(
+        (_, index) => index !== state.editIndex
+      )
+    })
+  ),
+
+  on(
+    ShoppingListActions.startEdit,
+    (state, action) => ({
+      ...state, editIndex:
+        action.index
+    })
+  ),
+
+  on(
+    ShoppingListActions.stopEdit,
+    (state) => ({
+      ...state, editIndex: -1
     })
   )
+
 );
-*/
+
+
+export function shoppingListReducer(state: State, action: Action) {
+  return _shoppingListReducer(state, action);
+}
