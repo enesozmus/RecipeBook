@@ -1,76 +1,76 @@
-import { Component, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { IAuthResponse } from '../interfaces/auth-response';
-import { AuthService } from '../services/auth.service';
+import { Subscription } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../directives/placeholder.directive';
 
-/**
- * Herhangi bir Firebase Gerçek Zamanlı Veritabanı URL'sini REST uç noktası olarak kullanabilirsiniz.
- * Tek yapmanız gereken URL'nin sonuna .json eklemek ve favori HTTPS istemcinizden bir istek göndermek.
- */
+import { Store } from '@ngrx/store';
+import * as fromApp from '../ngrx/reducers/app.reducer';
+import * as AuthActions from '../ngrx/actions/auth.actions';
+
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
-export class AuthComponent implements OnDestroy {
+export class AuthComponent implements OnInit, OnDestroy {
+
   isLoginMode: boolean = true;
   isLoadingMode: boolean = false;
   // *ngIf="errorMessages"
   errorMessages: string = null;
   // Dynamic Component Loader
-  @ViewChild(PlaceholderDirective, { static: true })
-  alertHost: PlaceholderDirective;
-  private closeSubs: Subscription;
+  @ViewChild(PlaceholderDirective, { static: true }) alertHost: PlaceholderDirective;
+
+  private closeSub: Subscription;
+  private storeSub: Subscription;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    public viewContainerRef: ViewContainerRef
-  ) {}
+    public viewContainerRef: ViewContainerRef,
+    private store: Store<fromApp.AppState>
+  ) { }
+
+  ngOnInit(): void {
+    this.storeSub = this.store.select('auth').subscribe({
+      next: (state) => {
+        this.isLoadingMode = state.loading;
+        this.errorMessages = state.authError;
+        if (this.errorMessages) {
+          this.showErrorAlert(this.errorMessages);
+        }
+      },
+    }
+    );
+  }
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }
 
   onSubmit(authForm: NgForm) {
-    // console.log(authForm);
-    // console.log(authForm.form);
-    // console.log(authForm.form.value);
     this.isLoadingMode = true;
     if (!authForm.valid) {
       return;
     }
-    let authObservable: Observable<IAuthResponse>;
+
     const email = authForm.value.email;
     const password = authForm.value.password;
-    if (this.isLoginMode) {
-      authObservable = this.authService.login(email, password);
-    } else {
-      authObservable = this.authService.signUp(email, password);
+    if (this.isLoginMode)
+    {
+      // authObservable = this.authService.login(email, password);
+      this.store.dispatch(AuthActions.login({ email, password }));
     }
-
-    authObservable.subscribe({
-      next: (responseData) => {
-        console.log(responseData);
-        this.isLoadingMode = false;
-        this.router.navigate(['/recipes']);
-      },
-      error: (err) => {
-        console.log(err);
-        this.errorMessages = err;
-        this.showErrorAlert(err);
-        this.isLoadingMode = false;
-      },
-    });
+    else
+    {
+      //authObservable = this.authService.signUp(email, password);
+      this.store.dispatch(AuthActions.signup({ email, password }));
+    }
+    authForm.reset();
   }
 
   onHandleError() {
-    this.errorMessages = null;
+    this.store.dispatch(AuthActions.clearError());
   }
 
   private showErrorAlert(message: string) {
@@ -87,17 +87,21 @@ export class AuthComponent implements OnDestroy {
     hostViewContainerRef.clear();
 
     const alertComponentRef = hostViewContainerRef.createComponent<AlertComponent>(AlertComponent);
-    
+
     alertComponentRef.instance.message = message;
-    this.closeSubs = alertComponentRef.instance.close.subscribe(() => {
-      this.closeSubs.unsubscribe();
+    this.closeSub = alertComponentRef.instance.close.subscribe(() => {
+      this.closeSub.unsubscribe();
       hostViewContainerRef.clear();
     });
   }
 
   ngOnDestroy(): void {
-    if (this.closeSubs) {
-      this.closeSubs.unsubscribe();
+    if (this.closeSub) {
+      this.closeSub.unsubscribe();
+    }
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
     }
   }
+  
 }

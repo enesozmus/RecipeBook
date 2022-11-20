@@ -10,7 +10,10 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { shoppingListReducer } from './ngrx/reducers/shopping-list.reducer';
+import { authReducer } from './ngrx/reducers/auth.reducer';
+import { AuthEffects } from './ngrx/effects/auth.effects';
 
 
 
@@ -29,7 +32,8 @@ import { shoppingListReducer } from './ngrx/reducers/shopping-list.reducer';
      * .forRoot then needs a map, an object that tells NgRx which reducers we have in our application.
      * A reducer is just a function.
      */
-    StoreModule.forRoot({ shoppingList: shoppingListReducer })
+    StoreModule.forRoot({ shoppingList: shoppingListReducer, auth: authReducer }),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [
     {

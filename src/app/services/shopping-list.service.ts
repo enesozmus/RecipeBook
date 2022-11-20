@@ -10,7 +10,6 @@ export class ShoppingListService {
   ingredientsChanged = new Subject<Ingredient[]>();
   startedEditing = new Subject<number>();
 
-  // Bileşenler
   private ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
     new Ingredient('Lemons', 10),
@@ -29,8 +28,6 @@ export class ShoppingListService {
 
   addIngredient(ingredient: Ingredient) {
     this.ingredients.push(ingredient);
-    // listelerken kopya return ettiğimiz için
-    // kopyayı güncelle
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 
@@ -38,8 +35,6 @@ export class ShoppingListService {
     for (let ingredient of ingredients) {
       this.addIngredient(ingredient);
     }
-    //this.ingredients.push(...ingredients);
-    // kopyayı güncelle
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 
@@ -51,6 +46,6 @@ export class ShoppingListService {
   deleteIngredient(index: number){
     this.ingredients.splice(index, 1);
     this.ingredientsChanged.next(this.ingredients.slice());
-
   }
+
 }

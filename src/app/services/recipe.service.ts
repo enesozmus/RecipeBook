@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 import { Recipe } from '../models/recipe.model';
 import * as ShoppingListActions from '../ngrx/actions/shopping-list.actions';
-import * as fromShoppingList from '../ngrx/reducers/shopping-list.reducer';
+import * as fromApp from '../ngrx/reducers/app.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -45,13 +45,10 @@ export class RecipeService {
   private recipes: Recipe[] = [];
   recipesChanged = new Subject<Recipe[]>();
 
-  constructor(private store: Store<fromShoppingList.AppState>) {
-
+  constructor(private store: Store<fromApp.AppState>) {
   }
 
-  // yemek tariflerini listele
   getRecipes() {
-    // Bir array'in bir bölümünün bir kopyasını döndürür.
     return this.recipes.slice();
   }
 
@@ -59,7 +56,6 @@ export class RecipeService {
     return this.recipes[index];
   }
 
-  // yemek tarifine bileşenlerini ekle
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     // this.shoppingListService.addIngredients(ingredients);
     // this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
@@ -81,9 +77,9 @@ export class RecipeService {
     this.recipesChanged.next(this.recipes.slice());
   }
 
-  //
   setRecipes(recipes: Recipe[]) {
     this.recipes = recipes;
     this.recipesChanged.next(this.recipes.slice());
   }
+  
 }

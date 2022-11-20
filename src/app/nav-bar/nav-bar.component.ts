@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { Subscription, map } from 'rxjs';
 import { DataStorageService } from '../services/data-storage.service';
+
+import { Store } from '@ngrx/store';
+import * as fromApp from '../ngrx/reducers/app.reducer';
+import * as AuthActions from '../ngrx/actions/auth.actions';
 
 @Component({
   selector: 'app-nav-bar',
@@ -13,29 +16,41 @@ export class NavBarComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   private userSub: Subscription;
 
-  constructor(private dataStorageService: DataStorageService, private authService: AuthService) { }
+  constructor(
+    private dataStorageService: DataStorageService,
+    private store: Store<fromApp.AppState>
+  ) { }
 
+  //
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(user => {
-      this.isAuthenticated = !user ? false : true;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.userSub.unsubscribe();
+    this.userSub = this.store.select('auth')
+      .pipe(
+        map(authState => authState.user)).subscribe({
+          next: (user) => {
+            this.isAuthenticated = !!user;
+          }
+        });
   }
 
   //
   onSaveData() {
     this.dataStorageService.storeRecipes();
   }
+
   //
   onFetchData() {
     this.dataStorageService.fetchRecipes().subscribe();
   }
 
   //
-  onLogout(){
-    this.authService.logout();
+  onLogout() {
+    // this.authService.logout();
+    this.store.dispatch(AuthActions.logout());
   }
+
+  //
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
+  }
+
 }
