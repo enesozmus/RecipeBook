@@ -11,9 +11,11 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { shoppingListReducer } from './ngrx/reducers/shopping-list.reducer';
 import { authReducer } from './ngrx/reducers/auth.reducer';
 import { AuthEffects } from './ngrx/effects/auth.effects';
+import { environment } from '../environments/environment';
 
 
 
@@ -33,7 +35,8 @@ import { AuthEffects } from './ngrx/effects/auth.effects';
      * A reducer is just a function.
      */
     StoreModule.forRoot({ shoppingList: shoppingListReducer, auth: authReducer }),
-    EffectsModule.forRoot([AuthEffects])
+    EffectsModule.forRoot([AuthEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [
     {
