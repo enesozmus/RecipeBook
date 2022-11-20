@@ -12,7 +12,8 @@ import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from './recipe-start/recipe-start.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
-
+import {StoreModule} from '@ngrx/store';
+import * as fromRecipes from '../ngrx/reducers/recipe.reducer';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       ]
     }
     ]),
+    StoreModule.forFeature('recipes', fromRecipes.recipeReducer),
   ]
 })
 export class RecipesModule {}

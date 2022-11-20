@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, map } from 'rxjs';
-import { DataStorageService } from '../services/data-storage.service';
 
 import { Store } from '@ngrx/store';
 import * as fromApp from '../ngrx/reducers/app.reducer';
 import * as AuthActions from '../ngrx/actions/auth.actions';
+import * as RecipeActions from '../ngrx/actions/recipe.actions';
 
 @Component({
   selector: 'app-nav-bar',
@@ -16,10 +16,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   private userSub: Subscription;
 
-  constructor(
-    private dataStorageService: DataStorageService,
-    private store: Store<fromApp.AppState>
-  ) { }
+  constructor(private store: Store<fromApp.AppState>) {
+  }
 
   //
   ngOnInit(): void {
@@ -34,12 +32,14 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   //
   onSaveData() {
-    this.dataStorageService.storeRecipes();
+    // this.dataStorageService.storeRecipes();
+    this.store.dispatch(RecipeActions.storeRecipes());
   }
 
   //
   onFetchData() {
-    this.dataStorageService.fetchRecipes().subscribe();
+    // this.dataStorageService.fetchRecipes().subscribe();
+    this.store.dispatch(RecipeActions.fetchRecipes());
   }
 
   //

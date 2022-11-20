@@ -12,10 +12,10 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { shoppingListReducer } from './ngrx/reducers/shopping-list.reducer';
 import { authReducer } from './ngrx/reducers/auth.reducer';
 import { AuthEffects } from './ngrx/effects/auth.effects';
 import { environment } from '../environments/environment';
+import { RecipeEffects } from './ngrx/effects/recipe.effects';
 
 
 
@@ -27,15 +27,14 @@ import { environment } from '../environments/environment';
   imports: [
     BrowserModule,
     AppRoutingModule, HttpClientModule,
-    //RecipesModule, ShoppingModule, AuthModule
     SharedModule,
     /**
      * We added NgRx to our application by including the StoreModule and calling .forRoot.
      * .forRoot then needs a map, an object that tells NgRx which reducers we have in our application.
      * A reducer is just a function.
      */
-    StoreModule.forRoot({ shoppingList: shoppingListReducer, auth: authReducer }),
-    EffectsModule.forRoot([AuthEffects]),
+    StoreModule.forRoot({auth: authReducer}),
+    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [

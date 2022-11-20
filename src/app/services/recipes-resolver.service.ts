@@ -1,39 +1,44 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
+import { take, map, switchMap, of } from 'rxjs';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Recipe } from '../models/recipe.model';
-import { DataStorageService } from './data-storage.service';
-import { RecipeService } from './recipe.service';
+
+import * as fromApp from '../ngrx/reducers/app.reducer';
+import * as RecipesActions from '../ngrx/actions/recipe.actions';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecipesResolverService implements Resolve<Recipe[]> {
+export class RecipesResolverService implements Resolve<{ recipes: Recipe[] }> {
 
-  /**
-   * It needs to implement the resolve interface.
-   * Resolve is a generic interface which means we need to define which type of data it will resolve in the end
-   * 
-   * Resolve<>
-   *    → An interface that classes can implement to be a data provider.
-   *    → A data provider class can be used with the router to resolve data during navigation.
-   *    → The interface defines a `resolve()` method that is invoked when the navigation starts.
-   *    → The router waits for the data to be resolved before the route is finally activated.
-   */
-  constructor(private dataStorageService: DataStorageService, private recipesService: RecipeService) { }
+  constructor(
+    private store: Store<fromApp.AppState>,
+    private actions$: Actions
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
   {
-    const recipes = this.recipesService.getRecipes();
-
-    if (recipes.length === 0)
-    {
-      return this.dataStorageService.fetchRecipes();
-    }
-    else
-    {
-      return recipes;
-    }
+    return this.store.select('recipes').pipe(
+      take(1),
+      map(recipesState => { return recipesState.recipes }),
+      switchMap(recipes => {
+        if (recipes.length === 0)
+        {
+          this.store.dispatch(RecipesActions.fetchRecipes());
+          return this.actions$.pipe(
+            ofType(RecipesActions.setRecipes),
+            take(1)
+          );
+        }
+        else
+        {
+          return of({ recipes });
+        }
+      })
+    );
   }
 
-  //: Recipe[] | Observable<Recipe[]> | Promise<Recipe[]>
 }
